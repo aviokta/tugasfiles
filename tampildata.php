@@ -18,15 +18,15 @@
             background-color: #f5f5f5;
         }
     </style>
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
 
-    <h2>Data Buku</h2>
-    <a href="files.php">kembali ke form</a>
-    <div class="container">
+<h2>Data Buku</h2>
+<a href="files.php">kembali ke form</a>
+<div class="container">
     <table class="table">
         <tr>
             <th>Kode Buku</th>
@@ -37,6 +37,8 @@
             <th>Penerbit</th>
             <th>Kategori</th>
             <th>Cover</th>
+            <th>Edit</th>
+
         </tr>
 
         <?php
@@ -47,13 +49,19 @@
         foreach ($rows as $row) {
             $data = explode(",", $row);
             echo '<tr>';
-            foreach ($data as $value) {
-                echo '<td>' . $value . '</td>';
+            foreach ($data as $key => $value) {
+                if ($key === 7) { // Kolom indeks ke-6 adalah kolom gambar
+                    echo "<td><img src='uploads/" . $value . "' alt='Cover' height='100'></td>";
+                } else {
+                    echo '<td>' . $value . '</td>';
+                }
             }
+
+            echo "<td><a href='formupdate.php?code=" . $value . "'>Update</a> | <a href='delete.php?code=" . $value . "'>Delete</a></td>";
             echo '</tr>';
         }
         ?>
     </table>
-    </div>
+</div>
 </body>
 </html>

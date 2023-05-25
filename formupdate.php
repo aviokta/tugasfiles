@@ -1,22 +1,43 @@
 <?php
+// Function to update the data in the file
+function updateData($file_path, $rows)
+{
+    $content = '';
+    foreach ($rows as $row) {
+        $content .= implode(',', $row) . "\n";
+    }
+    file_put_contents($file_path, $content);
+}
+
+$file_path = 'databuku.txt';
+$file_content = file_get_contents($file_path);
+$rows = explode("\n", $file_content);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $kodeBuku = $_POST['kodeBuku'];
-    $judul = $_POST['judul'];
-    $pengarang = $_POST['pengarang'];
-    $tahunTerbit = $_POST['tahunTerbit']; 
-    $jumlahHalaman = $_POST['jumlahHalaman']; 
-    $penerbit = $_POST['penerbit']; 
-    $kategori = $_POST['kategori']; 
-    $cover = $_POST['cover']; 
+    $update_index = $_POST['update_index'];
+    $updated_data = [
+        $_POST['kodeBuku'],
+        $_POST['judul'],
+        $_POST['pengarang'],
+        $_POST['tahunTerbit'],
+        $_POST['jumlahHalaman'],
+        $_POST['penerbit'],
+        $_POST['kategori'],
+        $_POST['cover']
+    ];
 
-
-    $data = "$kodeBuku, $judul, $pengarang, $tahunTerbit, $jumlahHalaman, $penerbit, $kategori, $cover \n";
-
-    // Menyimpan data ke file
-    $file = 'databuku.txt';
-    file_put_contents($file, $data, FILE_APPEND | LOCK_EX);
-
-    echo "Data telah disimpan ke file.";
+    if ($update_index >= 0 && $update_index < count($rows)) {
+        $data = explode(",", $rows[$update_index]);
+        if (count($data) == count($updated_data)) {
+            $rows[$update_index] = implode(',', $updated_data);
+            updateData($file_path, $rows);
+            echo 'Data updated successfully.';
+        } else {
+            echo 'Invalid data format.';
+        }
+    } else {
+        echo 'Invalid update index.';
+    }
 }
 ?>
 
@@ -67,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="text" name="kategori" id="kategori"><br><br>
 
         <label for="cover">COVER:</label>
-        <input type="file" name="cover" id="cover" accept="iamge/*"><br><br>
+        <input type="file" name="cover" id="cover" accept="image/*"><br><br>
 
         <input type="submit" value="upload">
     </form>
